@@ -22,7 +22,6 @@ app.get('/', function(req, res) {
     } else {
         day = 'weekday'
     }
-    console.log(currentDay);
   
     let options = {
         weekday : 'long',
@@ -32,7 +31,6 @@ app.get('/', function(req, res) {
 
     let dayEjs = today.toLocaleDateString('en-US', options)
     
-    console.log(dayEjs);
     res.render('list', {
         kindOfDay: day,
         currentDayName: dayEjs,
@@ -42,11 +40,16 @@ app.get('/', function(req, res) {
 
 app.post('/', function(req, res){
     item = req.body.item
+    console.log('valor de item', item);
     items.push(item)
-    console.log(item);
-    console.log(items);
     res.redirect('/')
+    console.log(items);
     
+})
+
+
+app.get('/about', function(req, res) {
+    res.render('about')
 })
 
 app.listen(3000, function(){
