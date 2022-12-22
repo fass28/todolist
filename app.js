@@ -1,6 +1,7 @@
 /* adding express & bodyParser */
 const express = require("express")
 const bodyParser = require("body-parser")
+const { getDate } = require('./date')
 
 const app = express()
 let items = ['buy food','cook food', 'eat food']
@@ -13,27 +14,10 @@ console.log('path',__dirname);
 app.set('view engine', 'ejs')
 
 app.get('/', function(req, res) {
-    let today = new Date()
-    let currentDay = today.getDay()
-    let day = ''
-    
-    if (currentDay === 6 || currentDay === 5 ){
-        day = 'weekend'
-    } else {
-        day = 'weekday'
-    }
-  
-    let options = {
-        weekday : 'long',
-        day : 'numeric',
-        month : 'long'
-    }
-
-    let dayEjs = today.toLocaleDateString('en-US', options)
-    
-    res.render('list', {
-        kindOfDay: day,
-        currentDayName: dayEjs,
+        let day = getDate()
+        
+        res.render('list', {
+        currentDayName: day,
         newlistItems: items
     })
 })
