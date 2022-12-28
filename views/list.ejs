@@ -3,12 +3,17 @@
         <h1><%= currentDayName %></h1>
     </div>
     <div class="box">
-            <%    for (let i = 0; i < newlistItems.length; i++) { %>
-                <div class="item">
-                    <input type="checkbox">
-                    <p> <%=   newlistItems[i] %></p>
-                </div>    
-            <%   } %>
+      
+    
+            <% newlistItems.forEach(function(item) { %>
+             <div class="item">
+                 <input type="checkbox">
+                 <p><%=  item.name%></p>   
+                </div>   
+            <%}) %>
+           
+
+
             <form class="item" action="/" method="post">
                 <input type="text" name="item" placeholder="New item" autocomplete="off" required>
                 <button type="submit">+</button>    
