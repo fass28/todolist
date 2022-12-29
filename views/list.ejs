@@ -2,31 +2,57 @@
     <div class="box" id="heading">
         <h1><%= listTitle %></h1>
     </div>
+    <button disabled id="buttonDel" form="tasksForm" type="submit">Delete</button>
     <div class="box">
-      
-        <% newlistItems.forEach(function(item) { %>
-            <form action="/delete" method="post" id="form">
-                 <div class="item">
-                     <input type="checkbox" name="checkbox" value="<%= item._id %>" onclick="validation(event)">
-                     <p><%=  item.name%></p>
+        <form action="/deleteMany" method="post" id="tasksForm">
+            <% newlistItems.forEach(function(item, index) { %>
+                <div class="item">
+                    <input id="checkBox_<%= item._id %>" type="checkbox" name="checkbox" value="<%= item._id %>"  >
+                    <p><%=  item.name%></p>
                 </div>   
-                <input type="hidden" name="inputListName" value="<%= listTitle %>"> </input>
-            </form>
-        <%}) %>
+            <%}) %>
+            <input type="hidden" name="inputListName" value="<%= listTitle %>"> </input>
+        </form>
 
         <form class="item" action="/" method="post">
             <input type="text" name="newItem" placeholder="New item" autocomplete="off" required>
-            <button type="submit" name="list" value="<%= listTitle %>">+</button>    
-        </form>   
+            <button class="button" type="submit" name="list" value="<%= listTitle %>">+</button>    
+        </form>
     </div>
-    <script>
-        function validation(event){
-            if (window.confirm("Are you sure you want to delete this")){
-                document.getElementById('form').submit()
-            } else {
-                event.preventDefault();
+     <script>
+        let button = document.getElementById('buttonDel')
+        let checkBoxValidation = document.querySelectorAll('input[type=checkbox]')
+        /* console.log(checkBoxValidation) */
+
+        for (let checkbox of checkBoxValidation) {
+            checkbox.addEventListener("click", function(e) {
+                /* console.log(e.target.checked) */
+                if  (e.target.checked){
+                    button.disabled=false
+                } else{
+                    // al menos uno tiene el checked
+                    const someImputChecked = validateCheckboxes()
+                    if (someImputChecked) {
+                        button.disabled=false
+                    } else {
+                        button.disabled=true
+                    }
+                }
+            });
+        };
+
+        function validateCheckboxes() {
+            /* let flag = false
+            for (let i = 0; i < checkBoxValidation.length; i++) {
+                if (checkBoxValidation[i].checked) {
+                    flag = true
+                    break
+                }
             }
+            return flag; */
+
+            return Array.from(checkBoxValidation).some(chk => chk.checked)
         }
-    </script>
+    </script> 
 <%- include('footer') -%>
 

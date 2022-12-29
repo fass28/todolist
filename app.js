@@ -76,14 +76,15 @@ app.get('/:path', function(req,res){
     const path = _.capitalize(req.params.path)
 
     List.findOne({name: path}, function(err, result){
+        console.log('result', result)
         if(result){
             res.render('list', {
                 listTitle: result.name,
                 newlistItems: result.items
-                })
-            console.log('existe')
+            })
+            console.log('existe la lista')
         }else{
-            console.log('no existe');
+            console.log('no existe la lista y se crea');
             const list = new List({
                 name: path,
                 items: defaultItems
@@ -119,9 +120,11 @@ app.post('/', function(req, res){
 
 
 app.post('/delete', function(req,res){
+
     const checkedId = req.body.checkbox
     const inputListName = req.body.inputListName
-    
+    console.log('aqui los q estan chequeados', req.body);
+
     if(inputListName === 'Today'){
         Item.deleteOne({_id: checkedId}, function(err){
             if (err){
@@ -139,6 +142,48 @@ app.post('/delete', function(req,res){
         })
     }
 
+})
+
+app.post('/deleteMany', function(req, res) {
+    /* console.log(req.body) */
+    const inputListName = req.body.inputListName
+
+    if(inputListName === 'Today') {
+        Item.deleteMany(
+            {
+              _id: {
+                $in: req.body.checkbox
+              }
+            },
+            function(err, result) {
+                console.log(result)
+                if (!err) {
+                    res.redirect('/')
+                }
+            }
+        );
+    } else {
+        List.findOneAndUpdate(
+            { name: inputListName },
+            { $pull:
+                {
+                    items: {
+                        _id: {
+                            $in: req.body.checkbox
+                        }
+                    }
+                }
+            },
+            function(err,result) {
+                /* console.log(result) */
+                if(!err){
+                    res.redirect('/' + inputListName)
+                }
+            }
+        )
+    }
+
+    
 })
 
 
