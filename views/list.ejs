@@ -1,23 +1,32 @@
 <%- include('header') -%> 
     <div class="box" id="heading">
-        <h1><%= currentDayName %></h1>
+        <h1><%= listTitle %></h1>
     </div>
     <div class="box">
       
-    
-            <% newlistItems.forEach(function(item) { %>
-             <div class="item">
-                 <input type="checkbox">
-                 <p><%=  item.name%></p>   
+        <% newlistItems.forEach(function(item) { %>
+            <form action="/delete" method="post" id="form">
+                 <div class="item">
+                     <input type="checkbox" name="checkbox" value="<%= item._id %>" onclick="validation(event)">
+                     <p><%=  item.name%></p>
                 </div>   
-            <%}) %>
-           
+                <input type="hidden" name="inputListName" value="<%= listTitle %>"> </input>
+            </form>
+        <%}) %>
 
-
-            <form class="item" action="/" method="post">
-                <input type="text" name="item" placeholder="New item" autocomplete="off" required>
-                <button type="submit">+</button>    
-            </form>   
+        <form class="item" action="/" method="post">
+            <input type="text" name="newItem" placeholder="New item" autocomplete="off" required>
+            <button type="submit" name="list" value="<%= listTitle %>">+</button>    
+        </form>   
     </div>
+    <script>
+        function validation(event){
+            if (window.confirm("Are you sure you want to delete this")){
+                document.getElementById('form').submit()
+            } else {
+                event.preventDefault();
+            }
+        }
+    </script>
 <%- include('footer') -%>
 
